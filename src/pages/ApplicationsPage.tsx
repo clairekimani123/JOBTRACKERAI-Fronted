@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import { Application } from '../types';
+import type { Application } from '../types';
 import { Plus, Search, Filter, Trash2, Edit, AlertCircle } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 
@@ -127,7 +127,7 @@ const ApplicationsPage: React.FC = () => {
         {/* Error Message */}
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 shrink-0" />
             <span>{error}</span>
           </div>
         )}

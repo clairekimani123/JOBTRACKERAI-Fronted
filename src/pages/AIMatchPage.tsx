@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import Layout from '../components/layout/Layout';
-import { Application, Resume, AIAnalysis } from '../types';
-import { Sparkles, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
+import type { Application, Resume, AIAnalysis } from '../types';
+import { Sparkles, AlertCircle, CheckCircle } from 'lucide-react';
 
 const AIMatchPage: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -133,7 +133,7 @@ const AIMatchPage: React.FC = () => {
         {result && (
           <div className="mt-12 bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
             {/* Match Score Header */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-800 px-8 py-10 text-white text-center">
+            <div className="bg-linear-to-r from-primary-600 to-primary-800 px-8 py-10 text-white text-center">
               <div className="text-6xl font-bold mb-2">
                 {Math.round(result.match_score)}%
               </div>
@@ -153,7 +153,7 @@ const AIMatchPage: React.FC = () => {
                   Strengths
                 </h3>
                 <ul className="space-y-2 text-gray-700">
-                  {result.strengths.map((strength, i) => (
+                  {result.strengths || [].map((strength, i) => (
                     <li key={i} className="flex items-start">
                       <span className="text-green-500 mr-2">•</span>
                       {strength}
@@ -168,7 +168,7 @@ const AIMatchPage: React.FC = () => {
                   Missing Skills
                 </h3>
                 <ul className="space-y-2 text-gray-700">
-                  {result.missing_skills.map((skill, i) => (
+                  {result.missing_skills || [].map((skill, i) => (
                     <li key={i} className="flex items-start">
                       <span className="text-amber-500 mr-2">•</span>
                       {skill}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import api from '../services/api';
 import Layout from '../components/layout/Layout';
-import { Resume } from '../types';
-import { Upload, FileText, Trash2, Download, Eye, AlertCircle } from 'lucide-react';
+import type { Resume } from '../types';
+import { Upload, FileText, Trash2, Eye, AlertCircle } from 'lucide-react';
 
 const ResumesPage: React.FC = () => {
   const [resumes, setResumes] = useState<Resume[]>([]);
@@ -115,7 +115,8 @@ const ResumesPage: React.FC = () => {
 
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 shrink-0" />
+           
             <span>{error}</span>
           </div>
         )}
@@ -169,7 +170,7 @@ const ResumesPage: React.FC = () => {
 
                   <div className="flex items-center gap-2">
                     <a
-                      href={resume.file_url || `http://localhost:8000/${resume.file_path}`}
+                      href={resume.file_path || `http://localhost:8000/${resume.file_path}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-full transition-colors"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import { Application, ApplicationStats } from '../types';
+import type { Application, ApplicationStats } from '../types';
 import {
   Briefcase,
   Clock,
@@ -122,7 +122,7 @@ const DashboardPage: React.FC = () => {
         {/* Error */}
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 shrink-0" />
             <span>{error}</span>
           </div>
         )}

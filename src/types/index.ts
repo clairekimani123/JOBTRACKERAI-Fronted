@@ -84,4 +84,5 @@ export interface ApplicationStats {
   interview: number;
   offer: number;
   rejected: number;
+  withdrawn?: number;
 }

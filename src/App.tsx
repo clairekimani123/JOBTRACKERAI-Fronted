@@ -69,9 +69,45 @@ function AppRoutes() {
         }
       />
 
+      {/* --- ADD THESE ROUTES TO USE THE IMPORTS --- */}
+      <Route
+        path="/applications"
+        element={
+          <ProtectedRoute>
+            <ApplicationsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/applications/add"
+        element={
+          <ProtectedRoute>
+            <AddApplicationPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/resumes"
+        element={
+          <ProtectedRoute>
+            <ResumesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ai-match"
+        element={
+          <ProtectedRoute>
+            <AIMatchPage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Default redirect */}
       <Route path="/" element={<Navigate to="/dashboard" />} />
       <Route path="*" element={<Navigate to="/dashboard" />} />
+
+       
     </Routes>
   );
 }

@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ApplicationsPage from './pages/ApplicationsPage';
 import AddApplicationPage from './pages/AddApplicationPage';
+import EditApplicationPage from './pages/EditApplicationPage';
 import ResumesPage from './pages/ResumesPage';
 import AIMatchPage from './pages/AIMatchPage';
 
@@ -79,7 +80,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/applications/add"
+        path="/applications/new"
         element={
           <ProtectedRoute>
             <AddApplicationPage />
@@ -102,6 +103,15 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      
+        <Route 
+          path="/applications/:id/edit" // 2. Add this route with the :id parameter
+          element={
+            <ProtectedRoute>
+              <EditApplicationPage />
+            </ProtectedRoute>
+          } 
+        />
 
       {/* Default redirect */}
       <Route path="/" element={<Navigate to="/dashboard" />} />

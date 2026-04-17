@@ -7,6 +7,7 @@ import { Save, X } from 'lucide-react';
 const AddApplicationPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
     company_name: '',
@@ -34,13 +35,26 @@ const AddApplicationPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
+
+    // ✅ Convert empty string dates to null before sending
+    // FastAPI expects null or a valid date, not an empty string
+    const payload = {
+      ...formData,
+      follow_up_date: formData.follow_up_date || null,
+      job_description: formData.job_description || null,
+      notes: formData.notes || null,
+      job_url: formData.job_url || null,
+      salary_range: formData.salary_range || null,
+      location: formData.location || null,
+    }
 
     try {
-      await api.post('/api/applications/', formData);
+      await api.post('/api/applications/', payload)
       navigate('/applications');
     } catch (error) {
       console.error('Error creating application:', error);
-      alert('Failed to create application');
+      setError('Failed to create application. Please check your details and try again.');
     } finally {
       setLoading(false);
     }
@@ -58,6 +72,13 @@ const AddApplicationPage: React.FC = () => {
             <X className="w-6 h-6" />
           </button>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -127,6 +148,20 @@ const AddApplicationPage: React.FC = () => {
             </div>
 
             <div>
+              <label htmlFor="follow_up_date" className="block text-sm font-medium text-gray-700 mb-1">
+                Follow Up Date
+              </label>
+              <input
+                type="date"
+                id="follow_up_date"
+                name="follow_up_date"
+                value={formData.follow_up_date}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
               <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
                 Location
               </label>
@@ -150,25 +185,25 @@ const AddApplicationPage: React.FC = () => {
                 name="salary_range"
                 value={formData.salary_range}
                 onChange={handleChange}
-                placeholder="e.g. $80k - $120k"
+                placeholder="e.g. KES 80,000 - 120,000"
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="job_url" className="block text-sm font-medium text-gray-700 mb-1">
-              Job URL
-            </label>
-            <input
-              type="url"
-              id="job_url"
-              name="job_url"
-              value={formData.job_url}
-              onChange={handleChange}
-              placeholder="https://..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+            <div>
+              <label htmlFor="job_url" className="block text-sm font-medium text-gray-700 mb-1">
+                Job URL
+              </label>
+              <input
+                type="url"
+                id="job_url"
+                name="job_url"
+                value={formData.job_url}
+                onChange={handleChange}
+                placeholder="https://..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
           </div>
 
           <div>

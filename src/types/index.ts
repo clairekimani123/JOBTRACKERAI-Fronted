@@ -71,8 +71,8 @@ export interface AIAnalysis {
   application_id: number;
   resume_id: number;
   match_score: number;
-  strengths: string;
-  missing_skills: string;
+  strengths: string[];
+  missing_skills: string[];
   recommendation: string;
   created_at: string;
 }

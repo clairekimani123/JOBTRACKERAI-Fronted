@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import type { Application, ApplicationStats } from '../types';
+import type { Application } from '../types';
 import {
   Briefcase,
   Clock,
@@ -15,6 +15,22 @@ import {
   AlertCircle,
 } from 'lucide-react';
 
+// ✅ Matches the actual API response shape
+interface StatsResponse {
+  total: number;
+  by_status: Record<string, number>;
+}
+
+// ✅ Flat stats used by the UI
+interface ApplicationStats {
+  total: number;
+  applied: number;
+  interview: number;
+  offer: number;
+  rejected: number;
+  withdrawn: number;
+}
+
 const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
   const [stats, setStats] = useState<ApplicationStats>({
@@ -23,7 +39,7 @@ const DashboardPage: React.FC = () => {
     interview: 0,
     offer: 0,
     rejected: 0,
-    withdrawn: 0, // added for completeness
+    withdrawn: 0,
   });
   const [recentApplications, setRecentApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,12 +55,23 @@ const DashboardPage: React.FC = () => {
       setError(null);
 
       const [statsRes, appsRes] = await Promise.all([
-        api.get<ApplicationStats>('/api/applications/stats/summary'),
-        api.get<Application[]>('/api/applications/?limit=5&ordering=-applied_date'),
+        api.get<StatsResponse>('/api/applications/stats/summary'),
+        api.get<Application[]>('/api/applications/'),
       ]);
 
-      setStats(statsRes.data);
-      setRecentApplications(appsRes.data);
+      // ✅ Map nested by_status into flat stats object
+      const by_status = statsRes.data.by_status || {};
+      setStats({
+        total: statsRes.data.total || 0,
+        applied: by_status['applied'] || 0,
+        interview: by_status['interview'] || 0,
+        offer: by_status['offer'] || 0,
+        rejected: by_status['rejected'] || 0,
+        withdrawn: by_status['withdrawn'] || 0,
+      });
+
+      // Show only 5 most recent
+      setRecentApplications(appsRes.data.slice(0, 5));
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
       setError('Failed to load dashboard data. Please try again later.');
@@ -61,7 +88,6 @@ const DashboardPage: React.FC = () => {
       rejected: 'bg-red-100 text-red-800 border border-red-200',
       withdrawn: 'bg-gray-100 text-gray-700 border border-gray-200',
     };
-
     return styles[status] || 'bg-gray-100 text-gray-700 border border-gray-200';
   };
 
@@ -135,7 +161,7 @@ const DashboardPage: React.FC = () => {
           <p className="mt-2 text-gray-600">Track and optimize your job search journey</p>
         </div>
 
-        {/* Stats */}
+        {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           <StatCard
             title="Total"
@@ -178,7 +204,7 @@ const DashboardPage: React.FC = () => {
             to="/resumes"
             title="Manage Resumes"
             icon={<FileText className="h-7 w-7" />}
-            bgClass="bg-white border-2 border-primary-600 text-primary-700 hover:bg-primary-50"
+            bgClass="bg-white border-2 border-primary-600 hover:bg-primary-50"
             textColor="text-primary-700"
           />
           <QuickActionCard
@@ -191,8 +217,14 @@ const DashboardPage: React.FC = () => {
 
         {/* Recent Applications */}
         <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200">
+          <div className="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Recent Applications</h2>
+            <Link
+              to="/applications"
+              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            >
+              View all →
+            </Link>
           </div>
 
           {recentApplications.length === 0 ? (
@@ -245,7 +277,7 @@ const DashboardPage: React.FC = () => {
   );
 };
 
-// Extracted components for better readability
+// ── Sub-components ───────────────────────────────────────────────────────────
 
 type StatCardProps = {
   title: string;

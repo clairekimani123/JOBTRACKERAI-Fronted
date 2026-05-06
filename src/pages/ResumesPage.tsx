@@ -170,7 +170,7 @@ const ResumesPage: React.FC = () => {
 
                   <div className="flex items-center gap-2">
                     <a
-                      href={resume.file_path || `http://localhost:8000/${resume.file_path}`}
+                      href={resume.file_path || `https://jobtrackerai-4.onrender.com/${resume.file_path}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-full transition-colors"
